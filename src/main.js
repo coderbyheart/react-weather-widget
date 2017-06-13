@@ -69,7 +69,7 @@ class WeatherWidget extends React.Component {
                   name: now.symbol.value,
                   number: now.symbol.numberEx
                 },
-                time: new Date(now.to),
+                time: new Date(now.from),
                 sun: {
                   rise,
                   set,
