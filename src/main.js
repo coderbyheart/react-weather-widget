@@ -38,61 +38,57 @@ class WeatherWidget extends React.Component {
   }
 
   fetchWeatherData () {
-    const yrUrl = new URL(el.getAttribute('data-url-yr'), window.location.href)
-    const metUrl = new URL(el.getAttribute('data-url-met'), window.location.href)
-    yrUrl.searchParams.append('v', Math.floor(Date.now() / 1000 / 60))
-    metUrl.searchParams.append('v', Math.floor(Date.now() / 1000 / 60))
-    Promise
-      .all([fetch(yrUrl), fetch(metUrl)])
-      .then(([yrResponse, metResponse]) => {
-        if (!yrResponse.ok) return this.setState({loading: false, error: true})
-        if (!metResponse.ok) return this.setState({loading: false, error: true})
-        return Promise
-          .all([yrResponse.json(), metResponse.json()])
-          .then(([{weatherdata}, {now}]) => {
-            const rise = new Date(weatherdata.sun[0].$.rise)
-            const set = new Date(weatherdata.sun[0].$.set)
-            this.setState({
-              loading: false,
-              data: {
-                location: {
-                  name: weatherdata.location[0].name[0],
-                  type: weatherdata.location[0].type[0],
-                  country: weatherdata.location[0].country[0],
-                  timezone: {
-                    name: weatherdata.location[0].timezone[0].$.id,
-                    offset: +weatherdata.location[0].timezone[0].$.utcoffsetMinutes
-                  }
-                },
-                temperature: now.temperature.value,
-                symbol: {
-                  name: now.symbol.value,
-                  number: now.symbol.numberEx
-                },
-                time: new Date(now.from),
-                sun: {
-                  rise,
-                  set,
-                  hours: Math.round((set.getTime() - rise.getTime()) / 1000 / 60 / 60)
-                },
-                forecast: weatherdata.forecast[0].tabular[0].time.map(f => ({
-                  from: new Date(f.$.from),
-                  to: new Date(f.$.to),
-                  symbol: {
-                    name: f.symbol[0].$.name,
-                    number: f.symbol[0].$.numberEx
-                  },
-                  precipitation: f.precipitation[0].$,
-                  temperature: f.temperature[0].$.value
-                })),
-                credit: {
-                  text: weatherdata.credit[0].link[0].$.text,
-                  url: weatherdata.credit[0].link[0].$.url
-                }
-
+    const url = new URL(el.getAttribute('data-url'), window.location.href)
+    url.searchParams.append('v', Math.floor(Date.now() / 1000 / 60))
+    return fetch(url)
+      .then(response => {
+        if (!response.ok) return this.setState({loading: false, error: true})
+        return response.json()
+      })
+      .then(({weatherdata}) => {
+        const now = weatherdata.forecast[0].tabular[0].time.filter(f => new Date(f.$.to).getTime() > Date.now())[0]
+        const rise = new Date(weatherdata.sun[0].$.rise)
+        const set = new Date(weatherdata.sun[0].$.set)
+        this.setState({
+          loading: false,
+          data: {
+            location: {
+              name: weatherdata.location[0].name[0],
+              type: weatherdata.location[0].type[0],
+              country: weatherdata.location[0].country[0],
+              timezone: {
+                name: weatherdata.location[0].timezone[0].$.id,
+                offset: +weatherdata.location[0].timezone[0].$.utcoffsetMinutes
               }
-            })
-          })
+            },
+            temperature: now.temperature[0].$.value,
+            symbol: {
+              name: now.symbol[0].$.value,
+              number: now.symbol[0].$.numberEx
+            },
+            time: new Date(weatherdata.meta[0].lastupdate[0]),
+            sun: {
+              rise,
+              set,
+              hours: Math.round((set.getTime() - rise.getTime()) / 1000 / 60 / 60)
+            },
+            forecast: weatherdata.forecast[0].tabular[0].time.map(f => ({
+              from: new Date(f.$.from),
+              to: new Date(f.$.to),
+              symbol: {
+                name: f.symbol[0].$.name,
+                number: f.symbol[0].$.numberEx
+              },
+              precipitation: f.precipitation[0].$,
+              temperature: f.temperature[0].$.value
+            })),
+            credit: {
+              text: weatherdata.credit[0].link[0].$.text,
+              url: weatherdata.credit[0].link[0].$.url
+            }
+
+          }
+        })
       })
   }
 

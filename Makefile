@@ -15,16 +15,13 @@ dist/index.html: src/index.html
 dist/vær-trondheim-yr.json:
 	curl -s http://www.yr.no/sted/Norge/S%C3%B8r-Tr%C3%B8ndelag/Trondheim/Trondheim_sentrum/varsel.xml | ./node_modules/.bin/babel-node src/xml2json.js > $@
 
-dist/vær-trondheim-met.json:
-	curl -s 'https://www.met.no/_/service/no.met.metno/yr?id=52bde27b-996a-a27d-93cd-8df75889c112&language=no&mode=forecast' > $@
-
 iconssrc := $(shell find node_modules/@yr/weather-symbols/dist/png/100/*.png -type f)
 iconsdist := $(subst node_modules/@yr/weather-symbols/dist/png/100/,dist/icon/,$(iconssrc))
 dist/icon/%: node_modules/@yr/weather-symbols/dist/png/100/%
 	@mkdir -p $(dir $@)
 	cp $< $@
 
-dist: dist/main.min.js dist/index.html dist/vær-trondheim-yr.json dist/vær-trondheim-met.json $(iconsdist) ## Build for release
+dist: dist/main.min.js dist/index.html dist/vær-trondheim-yr.json $(iconsdist) ## Build for release
 
 # HELPERS
 
