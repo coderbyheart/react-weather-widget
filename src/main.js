@@ -129,14 +129,13 @@ class WeatherWidget extends React.Component {
           <time className='time' dateTime={time.toISOString()}>{moment(time).fromNow()}</time>
         </dd>
       </dl>
+      <button
+        type='button'
+        onClick={toggleForecast}>{(this.state.forecastVisible ? 'hide forecast' : 'show forecast')}</button>
       {(this.state.forecastVisible
-        ? <Forecast forecast={forecast} tzOffset={location.timezone.offset} sun={sun} images={this.state.images} />
-        : ''
+          ? <Forecast forecast={forecast} tzOffset={location.timezone.offset} sun={sun} images={this.state.images} />
+          : ''
       )}
-      <div className='toggleForecast'>
-        <button type='button'
-          onClick={toggleForecast}>{(this.state.forecastVisible ? 'hide forecast' : 'show forecast')}</button>
-      </div>
       <div className='credit'>
         <span>Source:</span> <a href={credit.url} target='_blank'>{credit.text}</a>
       </div>
