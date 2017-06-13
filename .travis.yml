@@ -11,7 +11,14 @@ script:
 - npm run lint
 - make dist
 after_success:
-- npm run semantic-release
+#- npm run semantic-release
+- cd dist
+- git init
+- git config user.name "Travis CI"
+- git config user.email "github@coderbyheart.com"
+- git add .
+- git commit -m "Deploy to GitHub Pages"
+- git push --force --quiet "https://${GH_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git" master:gh-pages > /dev/null 2>&1
 branches:
   except:
     - /^v\d+\.\d+\.\d+$/
