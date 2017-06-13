@@ -19,7 +19,13 @@ dist/index.html: src/index.html
 dist/vær-trondheim.json: src/vær-trondheim.json
 	cp $< $@
 
-dist: dist/main.min.js dist/index.html dist/vær-trondheim.json dist/xml2json.js ## Build for release
+iconssrc := $(shell find node_modules/@yr/weather-symbols/dist/png/100/*.png -type f)
+iconsdist := $(subst node_modules/@yr/weather-symbols/dist/png/100/,dist/icon/,$(iconssrc))
+dist/icon/%: node_modules/@yr/weather-symbols/dist/png/100/%
+	@mkdir -p $(dir $@)
+	cp $< $@
+
+dist: dist/main.min.js dist/index.html dist/vær-trondheim.json dist/xml2json.js $(iconsdist) ## Build for release
 
 # HELPERS
 
