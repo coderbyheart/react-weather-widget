@@ -30,7 +30,7 @@ const getIcon = (time, symbol, {rise, set}) => {
 class WeatherWidget extends React.Component {
   constructor (props) {
     super(props)
-    this.state = {loading: true, images: el.getAttribute('data-images') || './icon'}
+    this.state = {loading: true, forecastVisible: false, images: el.getAttribute('data-images') || './icon'}
   }
 
   componentDidMount () {
@@ -104,6 +104,8 @@ class WeatherWidget extends React.Component {
     const icon = getIcon(timeThere(location.timezone.offset, new Date(temperature.value)), symbol.number, sun)
     const iconSrc = `${this.state.images}/${icon}.png`
 
+    const toggleForecast = () => this.setState({forecastVisible: !this.state.forecastVisible})
+
     return <div className='widget'>
       <div className='temp'>{temperature.value}°C</div>
       <div className={`symbol ${symbol.name}`}>
@@ -127,7 +129,14 @@ class WeatherWidget extends React.Component {
           <time className='time' dateTime={time.toISOString()}>{moment(time).fromNow()}</time>
         </dd>
       </dl>
-      <Forecast forecast={forecast} tzOffset={location.timezone.offset} sun={sun} images={this.state.images} />
+      {(this.state.forecastVisible
+        ? <Forecast forecast={forecast} tzOffset={location.timezone.offset} sun={sun} images={this.state.images} />
+        : ''
+      )}
+      <div className='toggleForecast'>
+        <button type='button'
+          onClick={toggleForecast}>{(this.state.forecastVisible ? 'hide forecast' : 'show forecast')}</button>
+      </div>
       <div className='credit'>
         <span>Source:</span> <a href={credit.url} target='_blank'>{credit.text}</a>
       </div>
