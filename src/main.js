@@ -38,14 +38,18 @@ class WeatherWidget extends React.Component {
   }
 
   fetchWeatherData () {
-    const url = new URL(el.getAttribute('data-url'), window.location.href)
-    url.searchParams.append('v', Math.floor(Date.now() / 1000 / 60))
-    fetch(url)
-      .then(response => {
-        if (!response.ok) return this.setState({loading: false, error: true})
-        response.json()
-          .then(json => {
-            const weatherdata = json.weatherdata
+    const yrUrl = new URL(el.getAttribute('data-url-yr'), window.location.href)
+    const metUrl = new URL(el.getAttribute('data-url-met'), window.location.href)
+    yrUrl.searchParams.append('v', Math.floor(Date.now() / 1000 / 60))
+    metUrl.searchParams.append('v', Math.floor(Date.now() / 1000 / 60))
+    Promise
+      .all([fetch(yrUrl), fetch(metUrl)])
+      .then(([yrResponse, metResponse]) => {
+        if (!yrResponse.ok) return this.setState({loading: false, error: true})
+        if (!metResponse.ok) return this.setState({loading: false, error: true})
+        return Promise
+          .all([yrResponse.json(), metResponse.json()])
+          .then(([{weatherdata}, {now}]) => {
             const rise = new Date(weatherdata.sun[0].$.rise)
             const set = new Date(weatherdata.sun[0].$.set)
             this.setState({
@@ -60,15 +64,12 @@ class WeatherWidget extends React.Component {
                     offset: +weatherdata.location[0].timezone[0].$.utcoffsetMinutes
                   }
                 },
-                temperature: {
-                  value: weatherdata.observations[0].weatherstation[0].temperature[0].$.value,
-                  time: weatherdata.observations[0].weatherstation[0].temperature[0].$.time
-                },
+                temperature: now.temperature.value,
                 symbol: {
-                  name: weatherdata.observations[0].weatherstation[0].symbol[0].$.name,
-                  number: weatherdata.observations[0].weatherstation[0].symbol[0].$.number
+                  name: now.symbol.value,
+                  number: now.symbol.numberEx
                 },
-                time: new Date(weatherdata.meta[0].lastupdate[0]),
+                time: new Date(now.to),
                 sun: {
                   rise,
                   set,
@@ -101,15 +102,15 @@ class WeatherWidget extends React.Component {
 
     const {temperature, symbol, time, sun, forecast, location, credit} = this.state.data
 
-    const icon = getIcon(timeThere(location.timezone.offset, new Date(temperature.value)), symbol.number, sun)
+    const icon = getIcon(timeThere(location.timezone.offset, time), symbol.number, sun)
     const iconSrc = `${this.state.images}/${icon}.png`
 
     const toggleForecast = () => this.setState({forecastVisible: !this.state.forecastVisible})
 
     return <div className='widget'>
-      <div className='temp'>{temperature.value}°C</div>
+      <div className='temp'>{temperature}°C</div>
       <div className={`symbol ${symbol.name}`}>
-        <img src={iconSrc} alt={symbol.name} className='icon' />
+        <img src={iconSrc} alt={symbol.name} className='icon' onClick={toggleForecast} />
       </div>
       <dl className='sun'>
         <dt>Sunrise</dt>
