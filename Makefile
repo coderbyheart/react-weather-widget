@@ -9,15 +9,11 @@ dist/main.js: src/main.js
 	@mkdir -p $(dir $@)
 	./node_modules/.bin/browserify $< -o $@ -t [ babelify ]
 
-dist/xml2json.js: src/xml2json.js
-	@mkdir -p $(dir $@)
-	./node_modules/.bin/browserify $< -o $@ -t [ babelify ]
-
 dist/index.html: src/index.html
 	cp $< $@
 
-dist/vær-trondheim.json: src/vær-trondheim.json
-	cp $< $@
+dist/vær-trondheim.json:
+	curl -s https://www.yr.no/sted/Norge/S%C3%B8r-Tr%C3%B8ndelag/Trondheim/Trondheim/varsel.xml | ./node_modules/.bin/babel-node src/xml2json.js > $@
 
 iconssrc := $(shell find node_modules/@yr/weather-symbols/dist/png/100/*.png -type f)
 iconsdist := $(subst node_modules/@yr/weather-symbols/dist/png/100/,dist/icon/,$(iconssrc))
@@ -25,7 +21,7 @@ dist/icon/%: node_modules/@yr/weather-symbols/dist/png/100/%
 	@mkdir -p $(dir $@)
 	cp $< $@
 
-dist: dist/main.min.js dist/index.html dist/vær-trondheim.json dist/xml2json.js $(iconsdist) ## Build for release
+dist: dist/main.min.js dist/index.html dist/vær-trondheim.json $(iconsdist) ## Build for release
 
 # HELPERS
 
