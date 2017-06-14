@@ -1,5 +1,7 @@
 # react-weather-widget
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/coderbyheart/react-weather-widget.svg)](https://greenkeeper.io/)
+
 [![npm version](https://img.shields.io/npm/v/@coderbyheart/react-weather-widget.svg)](https://www.npmjs.com/package/@coderbyheart/react-weather-widget)
 [![Build Status](https://travis-ci.org/coderbyheart/react-weather-widget.svg?branch=master)](https://travis-ci.org/coderbyheart/react-weather-widget)
 [![monitored by greenkeeper.io](https://img.shields.io/badge/greenkeeper.io-monitored-brightgreen.svg)](http://greenkeeper.io/) 
