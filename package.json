@@ -52,7 +52,7 @@
     "husky": "<2.0.0",
     "node-static": "^0.7.9",
     "semantic-release": "^6.3.2",
-    "standard": "^8.6.0",
+    "standard": "^10.0.2",
     "uglify-js": "^3.0.10",
     "validate-commit-msg": "^2.10.1"
   }
