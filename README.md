@@ -17,7 +17,7 @@ Add this widget to your site:
 <script type="text/javascript" defer src="https://coderbyheart.github.io/react-weather-widget/main.min.js"></script>
 ```
 
-`data-url-yr` is the location of the weather JSON file, generated from a yr.no XML feed.
+`data-url` is the location of the weather JSON file, generated from a yr.no XML feed.
 
 ```bash
 curl -s \
