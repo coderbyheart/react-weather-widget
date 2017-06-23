@@ -11,7 +11,7 @@ script:
 - npm run lint
 - make dist
 after_success:
-#- npm run semantic-release
+- npm run semantic-release
 - cd dist
 - git init
 - git config user.name "Travis CI"
