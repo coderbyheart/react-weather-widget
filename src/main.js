@@ -16,8 +16,7 @@ const getIcon = (time, symbol, {rise, set}) => {
   sunRise.setHours(rise.getHours())
   const sunSet = new Date(time.getTime())
   sunSet.setHours(set.getHours())
-
-  const isDay = time > sunRise.getTime() && time < sunSet.getTime()
+  const isDay = time.getTime() > sunRise.getTime() && time.getTime() < sunSet.getTime()
   const isNight = !isDay
   const isMorketid = isNight && sunRise.getHours() >= 9 && sunSet.getHours() <= 17 // vi viser den halve sola når det er midt på dagen (mellom kl 09 og 17) og sola IKKE er oppe. http://om.yr.no/symbol/morketid/
   let icon = ('0' + symbol).substr(-2)
@@ -92,21 +91,23 @@ class WeatherWidget extends React.Component {
       })
   }
 
+  toggleForecast = () => {
+    this.setState({forecastVisible: !this.state.forecastVisible})
+  }
+
   render () {
     if (this.state.loading) return <div className='message'><p>Loading …</p></div>
     if (this.state.error) return <div className='message error'><p>Failed to load data.</p></div>
 
     const {temperature, symbol, time, sun, forecast, location, credit} = this.state.data
 
-    const icon = getIcon(timeThere(location.timezone.offset, time), symbol.number, sun)
+    const icon = getIcon(timeThere(location.timezone.offset, new Date()), symbol.number, sun)
     const iconSrc = `${this.state.images}/${icon}.png`
-
-    const toggleForecast = () => this.setState({forecastVisible: !this.state.forecastVisible})
 
     return <div className='widget'>
       <div className='temp'>{temperature}°C</div>
       <div className={`symbol ${symbol.name}`}>
-        <img src={iconSrc} alt={symbol.name} className='icon' onClick={toggleForecast} />
+        <img src={iconSrc} alt={symbol.name} className='icon' onClick={this.toggleForecast} />
       </div>
       <dl className='sun'>
         <dt>Sunrise</dt>
@@ -128,7 +129,7 @@ class WeatherWidget extends React.Component {
       </dl>
       <button
         type='button'
-        onClick={toggleForecast}>{(this.state.forecastVisible ? 'hide forecast' : 'show forecast')}</button>
+        onClick={this.toggleForecast}>{(this.state.forecastVisible ? 'hide forecast' : 'show forecast')}</button>
       {(this.state.forecastVisible
           ? <Forecast forecast={forecast} tzOffset={location.timezone.offset} sun={sun} images={this.state.images} />
           : ''
