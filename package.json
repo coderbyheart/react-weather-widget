@@ -35,29 +35,29 @@
     "README.md"
   ],
   "dependencies": {
-    "@yr/weather-symbols": "^5.0.0",
+    "@yr/weather-symbols": "^5.0.1",
     "moment": "^2.18.1",
-    "react": "^15.6.1",
+    "react": "^16.0.0",
     "react-dom": "^16.0.0",
-    "xml2js": "^0.4.17"
+    "xml2js": "^0.4.19"
   },
   "devDependencies": {
-    "babel-cli": "^6.24.1",
-    "babel-eslint": "^8.0.0",
+    "babel-cli": "^6.26.0",
+    "babel-eslint": "^8.0.1",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-assign": "^6.22.0",
-    "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.0",
     "babel-preset-es2015": "^6.22.0",
     "babel-preset-react": "^6.24.1",
     "babelify": "^7.3.0",
     "browserify": "^14.1.0",
     "husky": "^0.14.3",
-    "node-static": "^0.7.9",
-    "semantic-release": "^8.0.0",
-    "standard": "^10.0.2",
-    "uglify-js": "^3.0.26",
-    "validate-commit-msg": "^2.13.1"
+    "node-static": "^0.7.10",
+    "semantic-release": "^8.0.3",
+    "standard": "^10.0.3",
+    "uglify-js": "^3.1.3",
+    "validate-commit-msg": "^2.14.0"
   },
   "standard": {
     "parser": "babel-eslint"
