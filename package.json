@@ -55,7 +55,7 @@
     "browserify": "^14.5.0",
     "husky": "^0.14.3",
     "node-static": "^0.7.10",
-    "semantic-release": "^8.2.0",
+    "semantic-release": "^11.0.2",
     "standard": "^10.0.3",
     "uglify-js": "^3.2.1",
     "validate-commit-msg": "^2.14.0"
