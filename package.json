@@ -35,7 +35,7 @@
     "README.md"
   ],
   "dependencies": {
-    "@yr/weather-symbols": "^6.0.2",
+    "@yr/weather-symbols": "^7.0.0",
     "moment": "^2.20.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
